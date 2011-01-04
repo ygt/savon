@@ -172,13 +172,88 @@ The WSSE object
 
 [Savon::WSSE](http://github.com/rubiii/savon/blob/eight/lib/savon/wsse.rb) allows you to use [WSSE authentication](http://www.oasis-open.org/committees/wss/documents/WSS-Username-02-0223-merged.pdf) (PDF).
 
-{% highlight ruby %}
-# sets the WSSE credentials
-wsse.credentials "username", "password"
+### wsse:UsernameToken
 
-# enables WSSE digest authentication
+Simple WSSE authentication:
+
+{% highlight ruby %}
+wsse.credentials "username", "password"
+{% endhighlight %}
+
+{% highlight xml %}
+<wsse:Security
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+    <wsse:UsernameToken
+      wsu:Id="UsernameToken-1"
+      xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsse:Username>username</wsse:Username>
+        <wsse:Password
+          Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">
+            password
+        </wsse:Password>
+        <wsse:Nonce>921fb51c566a68cd206c411655b3e2b4d7bdfe98</wsse:Nonce>
+        <wsu:Created>2011-01-04T15:43:58CET</wsu:Created>
+    </wsse:UsernameToken>
+</wsse:Security>
+{% endhighlight %}
+
+WSSE digest authentication:
+
+{% highlight ruby %}
 wsse.credentials "username", "password", :digest
 {% endhighlight %}
+
+{% highlight xml %}
+<wsse:Security
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+    <wsse:UsernameToken
+      wsu:Id="UsernameToken-1"
+      xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsse:Username>username</wsse:Username>
+        <wsse:Password
+          Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">
+            ZjRhYmQ5YTRlNWRkNmE3MDE5OTFmMTUwMzQzOGQ1YzVmM2YyYmI3Nw==
+        </wsse:Password>
+        <wsse:Nonce>817c30954ad9dd8d69c49036a3e13f3464eb02fa</wsse:Nonce>
+        <wsu:Created>2011-01-04T15:43:58CET</wsu:Created>
+    </wsse:UsernameToken>
+</wsse:Security>
+{% endhighlight %}
+
+### wsse:Timestamp
+
+{% highlight ruby %}
+wsse.timestamp = true
+{% endhighlight %}
+
+{% highlight xml %}
+<wsse:Security
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+    <wsse:Timestamp
+      wsu:Id="Timestamp-1"
+      xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsu:Created>2011-01-05T15:43:58CET</wsu:Created>
+        <wsu:Expires>2011-01-05T15:44:58CET</wsu:Expires>
+    </wsse:Timestamp>
+</wsse:Security>
+{% endhighlight %}
+
+By setting `Savon::WSSE#timestamp` to `true`, wsu:Created is set to `Time.now` and wsu:Expires is set to `Time.now + 60`. You can also specify either one or both of these dates manually:
+
+{% highlight ruby %}
+wsse.created_at = Time.now
+wsse.expires_at = Time.now + 60
+{% endhighlight %}
+
+### Custom tags
+
+`Savon::WSSE` is based on an [autovivificating Hash](http://stackoverflow.com/questions/1503671/ruby-hash-autovivification-facets). So if you need to add custom tags, just do it:
+
+{% highlight ruby %}
+wsse["wsse:Security"]["wsse:UsernameToken"] = { "Organization" => "ACME" }
+{% endhighlight %}
+
+When generating the XML, this Hash will be merged with another Hash containing all the default tags and values. This way you can also overwrite the default values in case you need to.
 
 Executing SOAP requests
 -----------------------

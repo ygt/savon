@@ -21,7 +21,7 @@ pre, code { background:#f8f8ff; border:1px solid #ddd; color:#444; font:14px Inc
   code { padding:0.1em 0.3em; }
     pre code { border:0; padding:0; }
 
-#content { margin:0 auto; width:60em; }
+#content { margin:0 auto; width:65em; }
 
 div.warn { border:1px dashed #a00; padding:0.5em 1em; }
 .warn { color:#a00; }
