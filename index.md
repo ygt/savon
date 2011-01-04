@@ -39,7 +39,8 @@ Runtime dependencies
 
 * [Builder](http://rubygems.org/gems/builder) ~> 2.1.2
 * [Crack](http://rubygems.org/gems/crack) ~> 0.1.8
-* [HTTPI](http://rubygems.org/gems/httpi) >= 0.6.0
+* [HTTPI](http://rubygems.org/gems/httpi) >= 0.7.5
+* [Gyoku](http://rubygems.org/gems/gyoku) >= 0.1.1
 
 HTTPI is an interface supporting multiple HTTP libraries. It's a crucial part of Savon and you should make sure to get familiar with it.
 
