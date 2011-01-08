@@ -404,12 +404,12 @@ As with the SOAP action, Symbol keys will be converted to lowerCamelCase and Str
     xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"
     xmlns:wsdl="http://v1.example.com">
   <env:Body>
-    <wsdl:GetUser>
+    <wsdl:CreateUser>
       <firstName>The</firstName>
       <lastName>Hoff</lastName>
       <FAME>Knight Rider</FAME>
       <FAME>Baywatch</FAME>
-    </wsdl:GetUser>
+    </wsdl:CreateUser>
   </env:Body>
 </env:Envelope>
 {% endhighlight %}
