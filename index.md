@@ -434,10 +434,10 @@ This example will be translated to the following XML:
 <firstName>TheHoff</firstName><lastName xsi:nil="true"></lastName>
 {% endhighlight %}
 
-I would not recommend using a Hash for the SOAP body if you need to create complex XML structures, because there are better alternatives. One of them is to pass a block to the `Savon::SOAP::XML#body` method. Savon will then yield a `Builder::XmlMarkup` instance for you to use.
+I would not recommend using a Hash for the SOAP body if you need to create complex XML structures, because there are better alternatives. One of them is to pass a block to the `Savon::SOAP::XML#xml` method. Savon will then yield a `Builder::XmlMarkup` instance for you to use.
 
 {% highlight ruby %}
-soap.body do |xml|
+soap.xml do |xml|
   xml.firstName("The")
   xml.lastName("Hoff")
 end
