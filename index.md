@@ -55,7 +55,7 @@ client = Savon::Client.new do
 end
 {% endhighlight %}
 
-`Savon::Client.new` accepts a block to be evaluated in the context of the client object. Inside this block, you can access all methods from your own class, but local variables won't work. For more information on this, I recommend you read about [instance_eval with delegation](http://www.dcmanges.com/blog/ruby-dsls-instance-eval-with-delegation).
+`Savon::Client.new` accepts a block to be evaluated in the context of the client object. Inside this block, you can access local variables and even public methods from your own class, but instance variables won't work. For more information on this, I recommend you read about [instance_eval with delegation](http://www.dcmanges.com/blog/ruby-dsls-instance-eval-with-delegation).
 
 If you don't like this or if it's creating a problem for you, you can use block arguments to specify which objects you would like to receive and Savon will yield those instead of instance evaluating the block. The `.new` method accepts 1-3 arguments and yields the following objects:
 
