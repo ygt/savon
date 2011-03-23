@@ -47,7 +47,7 @@ HTTPI is an interface supporting multiple HTTP libraries. It's a crucial part of
 Getting started
 ---------------
 
-Savon is based around the [Savon::Client](http://github.com/rubiii/savon/blob/eight/lib/savon/client.rb) object. It represents a particular SOAP service and let's you configure and execute SOAP requests. Let's create a client using a remote WSDL document:
+Savon is based around the [Savon::Client](http://github.com/rubiii/savon/blob/master/lib/savon/client.rb) object. It represents a particular SOAP service and let's you configure and execute SOAP requests. Let's create a client using a remote WSDL document:
 
 {% highlight ruby %}
 client = Savon::Client.new do
@@ -81,7 +81,7 @@ The next sections should give you a pretty good impression on how these objects 
 The WSDL object
 ---------------
 
-The wsdl object is actually called [Savon::WSDL::Document](http://github.com/rubiii/savon/blob/eight/lib/savon/wsdl/document.rb), but I'll refer to these objects by shortnames. The wsdl object is a representation of a WSDL document.
+The wsdl object is actually called [Savon::WSDL::Document](http://github.com/rubiii/savon/blob/master/lib/savon/wsdl/document.rb), but I'll refer to these objects by shortnames. The wsdl object is a representation of a WSDL document.
 
 ### Inspecting a Service
 
@@ -127,7 +127,7 @@ end
 The HTTP object
 ---------------
 
-[HTTPI::Request](http://github.com/rubiii/httpi/blob/eight/lib/httpi/request.rb) is provided by the [HTTPI](http://rubygems.org/gems/httpi) gem and represents an HTTP request. Savon executes a GET request to retrieve remote WSDL documents and POST requests for each SOAP request.
+[HTTPI::Request](http://github.com/rubiii/httpi/blob/master/lib/httpi/request.rb) is provided by the [HTTPI](http://rubygems.org/gems/httpi) gem and represents an HTTP request. Savon executes a GET request to retrieve remote WSDL documents and POST requests for each SOAP request.
 
 I'm only going to document a few interesting details and point you to the [HTTPI documentation](http://github.com/rubiii/httpi) for additional information.
 
@@ -161,7 +161,7 @@ http.headers["SOAPAction"] = '"urn:example#service"'
 
 ### Cookies
 
-If your service relies on cookies to handle sessions, you can grab the cookie from the [HTTPI::Response](http://github.com/rubiii/httpi/blob/eight/lib/httpi/response.rb) and set it for the next request:
+If your service relies on cookies to handle sessions, you can grab the cookie from the [HTTPI::Response](http://github.com/rubiii/httpi/blob/master/lib/httpi/response.rb) and set it for the next request:
 
 {% highlight ruby %}
 client.http.headers["Cookie"] = response.http.headers["Set-Cookie"]
@@ -170,7 +170,7 @@ client.http.headers["Cookie"] = response.http.headers["Set-Cookie"]
 The WSSE object
 ---------------
 
-[Savon::WSSE](http://github.com/rubiii/savon/blob/eight/lib/savon/wsse.rb) allows you to use [WSSE authentication](http://www.oasis-open.org/committees/wss/documents/WSS-Username-02-0223-merged.pdf) (PDF).
+[Savon::WSSE](http://github.com/rubiii/savon/blob/master/lib/savon/wsse.rb) allows you to use [WSSE authentication](http://www.oasis-open.org/committees/wss/documents/WSS-Username-02-0223-merged.pdf) (PDF).
 
 ### wsse:UsernameToken
 
@@ -331,7 +331,7 @@ Notice, that the list is almost the same as the one for `Savon::Client.new`. Exc
 The SOAP object
 ---------------
 
-[Savon::SOAP::XML](http://github.com/rubiii/savon/blob/eight/lib/savon/soap/xml.rb) is tied to a single SOAP request and lets you customize the SOAP request XML.
+[Savon::SOAP::XML](http://github.com/rubiii/savon/blob/master/lib/savon/soap/xml.rb) is tied to a single SOAP request and lets you customize the SOAP request XML.
 
 ### SOAP version
 
@@ -468,7 +468,7 @@ soap.xml = "<custom><soap>request</soap></custom>"
 The Response object
 -------------------
 
-`Savon::Client#request` returns a [Savon::SOAP::Response](http://github.com/rubiii/savon/blob/eight/lib/savon/soap/response.rb) for you to work with. While `Savon::SOAP::Response#to_hash` converts the SOAP response XML to a Ruby Hash:
+`Savon::Client#request` returns a [Savon::SOAP::Response](http://github.com/rubiii/savon/blob/master/lib/savon/soap/response.rb) for you to work with. While `Savon::SOAP::Response#to_hash` converts the SOAP response XML to a Ruby Hash:
 
 {% highlight ruby %}
 response.to_hash  # => { :response => { :success => true, :name => "John" } }
