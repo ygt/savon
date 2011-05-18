@@ -20,7 +20,7 @@ module Savon
       end
 
       attr_accessor :http
-      attr_accessor :parts
+      attr_accessor :parts, :attachments
 
       # Returns whether the request was successful.
       def success?
@@ -78,11 +78,6 @@ module Savon
         @boundary ||= Mail::Field.new("Content-Type", http.headers["Content-Type"]).parameters['boundary']
       end
 
-      # Returns the array of attachments if it was a multipart response
-      def attachments
-        parts.attachments
-      end
-
       # Returns the complete SOAP response XML without normalization.
       def basic_hash
         @basic_hash ||= Savon::SOAP::XML.parse to_xml
@@ -96,7 +91,7 @@ module Savon
       # Returns the SOAP response XML.
       def to_xml
         if multipart?
-          parts.first.body.encoded          # we just assume the first part is the XML
+          @xml
         else
           http.body
         end
@@ -124,6 +119,9 @@ module Savon
         part_of_parts = Savon::SOAP::Part.new(:headers => http.headers, :body => http.body)
         part_of_parts.body.split!(boundary)
         @parts = part_of_parts.parts
+        decoded_parts = @parts.map(&:decoded)
+        @xml = decoded_parts.shift              # we just assume the first part is the XML
+        @attachments = decoded_parts
       end
 
 
