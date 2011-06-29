@@ -1,4 +1,5 @@
 require "savon/soap/xml"
+require "savon/soap/part"
 require "savon/soap/fault"
 require "savon/http/error"
 
@@ -13,10 +14,13 @@ module Savon
       # Expects an <tt>HTTPI::Response</tt> and handles errors.
       def initialize(response)
         self.http = response
+        @parts = []
+        decode_multipart
         raise_errors if Savon.raise_errors?
       end
 
       attr_accessor :http
+      attr_accessor :parts, :attachments
 
       # Returns whether the request was successful.
       def success?
@@ -72,14 +76,34 @@ module Savon
         result.kind_of?(Array) ? result.compact : [result].compact
       end
 
+      # Returns true if this is a multipart response
+      def multipart?
+        http.headers["Content-Type"] =~ /^multipart/
+      end
+
+      # Returns the boundary declaration of the multipart response
+      def boundary
+        return nil unless multipart?
+        @boundary ||= Mail::Field.new("Content-Type", http.headers["Content-Type"]).parameters['boundary']
+      end
+
       # Returns the complete SOAP response XML without normalization.
       def hash
         @hash ||= Nori.parse http.body
       end
 
+      # Returns the raw response body
+      def raw
+        http.body
+      end
+
       # Returns the SOAP response XML.
       def to_xml
-        http.body
+        if multipart?
+          @xml
+        else
+          http.body
+        end
       end
 
     private
@@ -88,6 +112,27 @@ module Savon
         raise soap_fault if soap_fault?
         raise http_error if http_error?
       end
+
+
+
+      # Decoding multipart responses
+      #
+      # response.to_xml will point to the first part, hopefully the SOAP part of the multipart
+      # All attachments are available in the response.parts array. Each is a Part from the mail gem. See the docs there for details but:
+      # response.parts[0].body is the contents
+      # response.parts[0].headers are the mime headers
+      # And you can do nesting:
+      # response.parts[0].parts[2].body
+      def decode_multipart
+        return unless multipart?
+        part_of_parts = Savon::SOAP::Part.new(:headers => http.headers, :body => http.body)
+        part_of_parts.body.split!(boundary)
+        @parts = part_of_parts.parts
+        decoded_parts = @parts.map(&:decoded)
+        @xml = decoded_parts.shift              # we just assume the first part is the XML
+        @attachments = decoded_parts
+      end
+
 
     end
   end
